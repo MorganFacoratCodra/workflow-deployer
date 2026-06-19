@@ -5,12 +5,25 @@ export type NodeStatus = 'pending' | 'running' | 'success' | 'failed' | 'skipped
 export type WorkflowNodeData = {
   label: string
   command?: string
+  repoPath?: string
+  addAll?: boolean
+  commit?: boolean
+  push?: boolean
+  remote?: string
+  branch?: string
   method?: string
   url?: string
   body?: string
   expression?: string
   message?: string
   seconds?: number
+  host?: string
+  port?: number
+  username?: string
+  password?: string
+  privateKey?: string
+  passphrase?: string
+  timeout?: number
 }
 
 export type WorkflowNode = Node<WorkflowNodeData>

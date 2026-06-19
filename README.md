@@ -72,10 +72,19 @@ Exemple complet (4 nœuds: `manualTrigger → shell → condition → notify`) d
 ## Types de nœuds MVP
 - `manualTrigger`: démarre le workflow
 - `shell`: exécute `command` via subprocess (timeout 15s) et capture stdout/stderr
+- `gitCommit`: opérations Git locales sur `repoPath` (`addAll`, `commit`, `message`, `push`, `remote`, `branch`) et expose `commitHash`
+- `sshCommand`: exécute une commande distante (`host`, `port`, `username`, `command`, `password` ou `privateKey`, `passphrase`, `timeout`)
 - `httpRequest`: requête HTTP (`method`, `url`, `body`)
 - `condition`: évalue `expression` sur `context`
 - `notify`: log message (`message`) avec variables `{{ nodeId.field }}`
 - `delay`: attend `seconds`
+
+## Éditeur visuel
+- Glisser-déposer depuis la palette pour créer des nœuds.
+- Clic droit sur un nœud pour ouvrir le menu contextuel:
+  - `Modifier` (sélectionne le nœud pour éditer ses propriétés)
+  - `Dupliquer` (copie le nœud avec un décalage de position)
+  - `Supprimer` (retire le nœud et ses arêtes entrantes/sortantes)
 
 ## Endpoints principaux
 - Workflows: `POST/GET/PUT/DELETE /api/workflows`
@@ -98,3 +107,50 @@ pytest
 
 ## Notes sécurité MVP
 Le nœud `shell` exécute des commandes système (`subprocess`). Ce comportement est utile pour le MVP mais potentiellement risqué en production (sandboxing/allowlist requis).
+
+- `sshCommand` utilise `paramiko.AutoAddPolicy()` pour un usage local simplifié : cela accepte automatiquement les clés d'hôte et expose à un risque MITM si utilisé hors environnement local de confiance.
+- Les credentials SSH (`password`, `privateKey`, `passphrase`) sont stockés en clair dans le JSON du workflow. Ceci est acceptable uniquement pour un usage local; ne pas utiliser en production.
+- `gitCommit` peut appeler `git push` si activé: des credentials Git doivent déjà être configurés sur la machine (SSH agent, helper, token, etc.).
+
+## Exemple JSON (git + ssh)
+```json
+{
+  "name": "Git and SSH demo",
+  "version": 1,
+  "graph": {
+    "nodes": [
+      { "id": "trigger", "type": "manualTrigger", "position": { "x": 40, "y": 80 }, "data": { "label": "Start" } },
+      {
+        "id": "git",
+        "type": "gitCommit",
+        "position": { "x": 280, "y": 80 },
+        "data": {
+          "label": "Commit",
+          "repoPath": "./",
+          "message": "chore: automated workflow commit",
+          "addAll": true,
+          "commit": true,
+          "push": false
+        }
+      },
+      {
+        "id": "ssh",
+        "type": "sshCommand",
+        "position": { "x": 520, "y": 80 },
+        "data": {
+          "label": "Remote check",
+          "host": "127.0.0.1",
+          "port": 22,
+          "username": "user",
+          "command": "echo ready",
+          "timeout": 10
+        }
+      }
+    ],
+    "edges": [
+      { "id": "e1", "source": "trigger", "target": "git" },
+      { "id": "e2", "source": "git", "target": "ssh" }
+    ]
+  }
+}
+```

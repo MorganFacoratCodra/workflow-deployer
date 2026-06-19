@@ -1,9 +1,16 @@
+import logging
+
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
+from fastapi.requests import Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 
 from app.database import init_database
 from app.routers import executions, workflows
 from app.ws import socket_manager
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 app = FastAPI(title="Workflow Deployer API", version="0.1.0")
 
@@ -27,6 +34,12 @@ def startup_event() -> None:
 @app.get("/health")
 def health() -> dict[str, str]:
     return {"status": "ok"}
+
+
+@app.exception_handler(Exception)
+async def generic_exception_handler(request: Request, exc: Exception) -> JSONResponse:
+    logger.exception("Unhandled application error on %s %s", request.method, request.url.path)
+    return JSONResponse(status_code=500, content={"detail": "Erreur interne du serveur."})
 
 
 @app.websocket("/ws/executions/{execution_id}")
