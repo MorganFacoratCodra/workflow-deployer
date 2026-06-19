@@ -1,0 +1,43 @@
+{
+  "name": "workflow-example",
+  "version": 1,
+  "graph": {
+    "nodes": [
+      {
+        "id": "trigger-1",
+        "type": "manualTrigger",
+        "position": { "x": 100, "y": 180 },
+        "data": { "label": "Manual Trigger" }
+      },
+      {
+        "id": "shell-1",
+        "type": "shell",
+        "position": { "x": 320, "y": 180 },
+        "data": { "label": "Shell", "command": "echo deployment-ready" }
+      },
+      {
+        "id": "condition-1",
+        "type": "condition",
+        "position": { "x": 560, "y": 180 },
+        "data": {
+          "label": "Condition",
+          "expression": "context['shell-1']['returncode'] == 0"
+        }
+      },
+      {
+        "id": "notify-1",
+        "type": "notify",
+        "position": { "x": 820, "y": 120 },
+        "data": {
+          "label": "Notify",
+          "message": "Déploiement terminé: {{ shell-1.stdout }}"
+        }
+      }
+    ],
+    "edges": [
+      { "id": "e1", "source": "trigger-1", "target": "shell-1" },
+      { "id": "e2", "source": "shell-1", "target": "condition-1" },
+      { "id": "e3", "source": "condition-1", "target": "notify-1", "on": "success" }
+    ]
+  }
+}
