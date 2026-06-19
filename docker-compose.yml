@@ -12,7 +12,7 @@ services:
 
   backend:
     build:
-      context: /home/runner/work/workflow-deployer/workflow-deployer/backend
+      context: ./backend
     environment:
       DATABASE_URL: ${DATABASE_URL:-postgresql+psycopg2://workflow:workflow@db:5432/workflow}
     ports:
@@ -22,7 +22,7 @@ services:
 
   frontend:
     build:
-      context: /home/runner/work/workflow-deployer/workflow-deployer/frontend
+      context: ./frontend
     environment:
       VITE_API_URL: ${VITE_API_URL:-http://localhost:8000/api}
       VITE_PROXY_TARGET: http://backend:8000
