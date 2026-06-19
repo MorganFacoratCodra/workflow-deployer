@@ -39,17 +39,21 @@ docker compose up --build
 
 ## Lancement manuel (dev)
 
+> Les commandes ci-dessous sont à exécuter depuis la racine du dépôt cloné.
+
 ### Backend
 ```bash
-cd /home/runner/work/workflow-deployer/workflow-deployer/backend
+cd backend
 python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
 uvicorn app.main:app --reload --port 8000
 ```
 
+> Sous Windows (PowerShell), activez l'environnement virtuel avec `.\.venv\Scripts\Activate.ps1`.
+
 ### Frontend
 ```bash
-cd /home/runner/work/workflow-deployer/workflow-deployer/frontend
+cd frontend
 npm install
 npm run dev
 ```
@@ -63,7 +67,7 @@ Structure:
 - `graph.edges[]`: connexions (`id`, `source`, `target`, `on` optionnel: `success`/`failure`)
 
 Exemple complet (4 nœuds: `manualTrigger → shell → condition → notify`) disponible dans:
-- `/home/runner/work/workflow-deployer/workflow-deployer/examples/sample-workflow.json`
+- `examples/sample-workflow.json`
 
 ## Types de nœuds MVP
 - `manualTrigger`: démarre le workflow
@@ -81,7 +85,7 @@ Exemple complet (4 nœuds: `manualTrigger → shell → condition → notify`) d
 
 ## Tests backend
 ```bash
-cd /home/runner/work/workflow-deployer/workflow-deployer/backend
+cd backend
 pytest
 ```
 
