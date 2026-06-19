@@ -1,6 +1,10 @@
+import type { DragEvent } from 'react'
+
 const nodeTypes = [
   { type: 'manualTrigger', label: 'Manual Trigger' },
   { type: 'shell', label: 'Shell' },
+  { type: 'gitCommit', label: 'Git Commit' },
+  { type: 'sshCommand', label: 'SSH Command' },
   { type: 'httpRequest', label: 'HTTP Request' },
   { type: 'condition', label: 'Condition' },
   { type: 'notify', label: 'Notify' },
@@ -29,4 +33,3 @@ export default function NodePalette() {
     </aside>
   )
 }
-import type { DragEvent } from 'react'
