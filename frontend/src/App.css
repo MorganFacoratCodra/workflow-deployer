@@ -1,0 +1,86 @@
+:root {
+  font-family: Inter, system-ui, -apple-system, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body,
+html,
+#root {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.app {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.toolbar {
+  display: flex;
+  gap: 8px;
+  padding: 10px;
+  border-bottom: 1px solid #e5e7eb;
+  align-items: center;
+}
+
+.content {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 220px 1fr 260px;
+  min-height: 0;
+}
+
+.panel {
+  border-right: 1px solid #e5e7eb;
+  padding: 12px;
+  overflow: auto;
+}
+
+.palette-item {
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  padding: 8px;
+  margin-bottom: 8px;
+  background: #f9fafb;
+  cursor: grab;
+}
+
+.canvas {
+  min-height: 400px;
+}
+
+.prop-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+
+.prop-field input {
+  padding: 6px;
+}
+
+.logs {
+  border-top: 1px solid #e5e7eb;
+  padding: 10px;
+  max-height: 220px;
+  overflow: auto;
+}
+
+.log-block {
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  margin-bottom: 8px;
+  padding: 8px;
+}
+
+.log-block pre {
+  white-space: pre-wrap;
+  margin: 4px 0 0;
+}
